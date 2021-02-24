@@ -10,9 +10,8 @@ repo to your local disk and then use that to create a publicly visible git rep o
 from the IBM enterprise git repo, but that is a separate excercise. After this code is in the github.com repo, run the following instructions.
 
 ```
-oc new-app --name=simple https://github.com/<your github.com id>/docker-builds-openshift.git --as-deployment-config
-oc expose svc simple
-oc patch route simple --type=json -p '[{"op": "add", "path": "/spec/tls", "value": {"termination": "edge"}}, {"op": "add", "path": "/spec/port", "value": {"targetPort": "9080-tcp"}}]'
+oc new-app --name=simple-stuff https://github.com/<your github.com id>/docker-builds-openshift.git --as-deployment-config
+oc create route edge --service=simple-stuff
 ```
 
 And then, `curl -k https://<hostname for route>/simple-stuff/simple/simon`. This should produce the string "/my-special-folder does not exist"
@@ -20,6 +19,17 @@ And then, `curl -k https://<hostname for route>/simple-stuff/simple/simon`. This
 ## Task
 
 0. Delete all existing artifiacts from the previous steps. 
+```
+zaphod:sa-bootcamp$ oc delete all -l app=simple-stuff
+service "simple-stuff" deleted
+deployment.apps "simple-stuff" deleted
+buildconfig.build.openshift.io "simple-stuff" deleted
+build.build.openshift.io "simple-stuff-1" deleted
+imagestream.image.openshift.io "simple-stuff" deleted
+imagestream.image.openshift.io "websphere-liberty" deleted
+route.route.openshift.io "simple-stuff" deleted
+zaphod:sa-bootcamp$ 
+```
 
 1. In the docker build, create a directory called /my-special-folder. Copy the Dockerfile in this git repo into that folder. Note that you will need to create this
 folder as the root user, otherwise, your creation of the directory will fail during the build.
