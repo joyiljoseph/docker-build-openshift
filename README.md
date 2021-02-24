@@ -81,6 +81,7 @@ This will open a "vi" sesssion. Scroll down in the file until you come to the "d
     type: Docker
 ```
 After you have done this, restart the build by saying "oc start-build simple-stuff". This new build will build using the "Dockerfile.answer" dockerfile.
+
 3. Repeat steps 1 and 2, but this time, call the app "even-simpler". What you have done with this step is to use the same git repo to create two different running instances (or applications) 
 of the code.
 4. Look for the image stream corresponding to "even-simpler". Use the "new-app" command and point to this imagestream and create a third instance of the application. Call this application
