@@ -81,9 +81,79 @@ This will open a "vi" sesssion. Scroll down in the file until you come to the "d
     type: Docker
 ```
 After you have done this, restart the build by saying "oc start-build simple-stuff". This new build will build using the "Dockerfile.answer" dockerfile.
-
+```
+oc create route edge --service=simple-stuff
+```
 3. Repeat steps 1 and 2, but this time, call the app "even-simpler". What you have done with this step is to use the same git repo to create two different running instances (or applications) 
 of the code.
-4. Look for the image stream corresponding to "even-simpler". Use the "new-app" command and point to this imagestream and create a third instance of the application. Call this application
+```
+aphod:docker-builds-openshift-answer$ oc new-app --name=even-simpler https://github.com/kstephen314159/docker-builds-openshift-answer.git
+--> Found container image 3e170c7 (8 months old) from docker.io for "docker.io/ibmcom/websphere-liberty:20.0.0.5-full-java11-openj9-ubi"
+
+    Red Hat Universal Base Image 8 
+    ------------------------------ 
+    The Universal Base Image is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.
+
+    Tags: base rhel8
+
+    * An image stream tag will be created as "websphere-liberty:20.0.0.5-full-java11-openj9-ubi" that will track the source image
+    * A Docker build using source code from https://github.com/kstephen314159/docker-builds-openshift-answer.git will be created
+      * The resulting image will be pushed to image stream tag "even-simpler:latest"
+      * Every time "websphere-liberty:20.0.0.5-full-java11-openj9-ubi" changes a new build will be triggered
+
+--> Creating resources ...
+    imagestream.image.openshift.io "even-simpler" created
+    buildconfig.build.openshift.io "even-simpler" created
+    deployment.apps "even-simpler" created
+    service "even-simpler" created
+--> Success
+    Build scheduled, use 'oc logs -f buildconfig/even-simpler' to track its progress.
+    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
+     'oc expose service/even-simpler' 
+    Run 'oc status' to view your app.
+zaphod:docker-builds-openshift-answer$ oc edit bc/even-simpler
+buildconfig.build.openshift.io/even-simpler edited
+zaphod:docker-builds-openshift-answer$ oc create route edge --service=simple-stuff
+```
+
+5. Look for the image stream corresponding to "even-simpler". Use the "new-app" command and point to this imagestream and create a third instance of the application. Call this application
 instance "simplest-of-all".
-4. Provide the output of the "curl" command shown above for the "simple", "even-simpler", and "simplest-of-all" apps.
+```
+zaphod:docker-builds-openshift-answer$ oc get is
+NAME                IMAGE REPOSITORY                                                                TAGS                              UPDATED
+a-derived-image     image-registry.openshift-image-registry.svc:5000/kstephe-us/a-derived-image     latest,3.0,2.0,1.0                6 days ago
+derived-app         image-registry.openshift-image-registry.svc:5000/kstephe-us/derived-app         latest                            
+even-simpler        image-registry.openshift-image-registry.svc:5000/kstephe-us/even-simpler        latest                            About a minute ago
+simple-stuff        image-registry.openshift-image-registry.svc:5000/kstephe-us/simple-stuff        latest                            16 minutes ago
+websphere-liberty   image-registry.openshift-image-registry.svc:5000/kstephe-us/websphere-liberty   20.0.0.5-full-java11-openj9-ubi   19 minutes ago
+zaphod:docker-builds-openshift-answer$ oc new-app --name=simplest-of-all even-simpler
+--> Found image cb9942b (2 minutes old) in image stream "kstephe-us/even-simpler" under tag "latest" for "even-simpler"
+
+    Red Hat Universal Base Image 8 
+    ------------------------------ 
+    The Universal Base Image is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.
+
+    Tags: base rhel8
+
+
+--> Creating resources ...
+    imagestreamtag.image.openshift.io "simplest-of-all:latest" created
+    deployment.apps "simplest-of-all" created
+    service "simplest-of-all" created
+--> Success
+    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
+     'oc expose service/simplest-of-all' 
+    Run 'oc status' to view your app.
+zaphod:docker-builds-openshift-answer$
+zaphod:docker-builds-openshift-answer$ oc create route edge --service=simplest-of-all
+route.route.openshift.io/simplest-of-all created
+```
+6. Provide the output of the "curl" command shown above for the "simple", "even-simpler", and "simplest-of-all" apps.
+Example, below, shows the output of "simplest-of-all", but the outputs of the other two should be the same:
+```
+zaphod:docker-builds-openshift-answer$ curl -k https://simplest-of-all-kstephe-us.ose-bootcamp-1612539632-f72ef11f3ab089a8c677044eb28292cd-0000.sjc03.containers.appdomain.cloud/simple-stuff/simple/simon
+FROM docker.io/ibmcom/websphere-liberty:20.0.0.5-full-java11-openj9-ubi
+COPY target/simple-stuff.war /config/dropins/
+COPY config/server.xml /config/
+COPY config/server.env /config/
+```
