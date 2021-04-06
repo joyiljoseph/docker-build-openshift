@@ -1,13 +1,12 @@
 ##  Performing a docker build within OpenShift
 
-Clone this git repo to your local disk and then use that to create a publicly visible git rep on github.com (the public one, not the IBM enterprise git repo).
-It is possible to get this working from the IBM enterprise git repo, but that is a separate excercise. After this code is in the github.com repo, run the 
-following instructions.
+This is extending the material in exercise 1 (building from base container). There a base image was provided in box, and you
+performed a docker build using that base image in your local machine. Here, that base image that was provided in exercise 1
+will be built within OpenShift. The provided Dockerfile will help you with that.
 
-This is extending the material in exercise 1 (building from base container). There a base image was provided in box, and you performed a docker build using that base image in your local
-machine. Here, that base image that was provided in exercise 1 will be built within OpenShift. The provided Dockerfile will help you with that. In order to get started, clone this git 
-repo to your local disk and then use that to create a publicly visible git rep on github.com (the public one, not the IBM enterprise git repo). It is also possible to get this working 
-from the IBM enterprise git repo, but that is a separate excercise. After this code is in the github.com repo, run the following instructions.
+To execute this exercise, clone this git repo to your local disk and then use that to create a publicly visible git rep on
+github.com (the public one, not the IBM enterprise git repo). It is possible to get this working from the IBM enterprise git
+repo, but that is a separate excercise. After this code is in the github.com repo, run the following instructions:
 
 ```
 oc new-app --name=simple-stuff https://github.com/<your github.com id>/docker-builds-openshift.git --as-deployment-config
