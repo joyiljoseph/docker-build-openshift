@@ -86,7 +86,7 @@ oc create route edge --service=simple-stuff
 3. Repeat steps 1 and 2, but this time, call the app "even-simpler". What you have done with this step is to use the same git repo to create two different running instances (or applications) 
 of the code.
 ```
-aphod:docker-builds-openshift-answer$ oc new-app --name=even-simpler https://github.com/kstephen314159/docker-builds-openshift-answer.git
+zaphod:docker-builds-openshift-answer$ oc new-app --name=even-simpler https://github.com/kstephen314159/docker-builds-openshift-answer.git
 --> Found container image 3e170c7 (8 months old) from docker.io for "docker.io/ibmcom/websphere-liberty:20.0.0.5-full-java11-openj9-ubi"
 
     Red Hat Universal Base Image 8 
