@@ -147,6 +147,8 @@ zaphod:docker-builds-openshift-answer$
 zaphod:docker-builds-openshift-answer$ oc create route edge --service=simplest-of-all
 route.route.openshift.io/simplest-of-all created
 ```
+With this step, you have created a third instance of the application, but this time, rather than it being built from source, you are using the already built image which is being referenced by the image stream, and using that.
+
 6. Provide the output of the "curl" command shown above for the "simple", "even-simpler", and "simplest-of-all" apps.
 Example, below, shows the output of "simplest-of-all", but the outputs of the other two should be the same:
 ```
